@@ -3,28 +3,9 @@ package it.unibo.apice.frameworkfv;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.Properties;
 
 import javax.swing.JFrame;
-
-//import com.sun.tools.javac.Main;
-//import com.sun.tools.javac.Main;
-
-/*
- * Created on 10-nov-2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 
 /**
  * @author eoliva
@@ -33,6 +14,7 @@ import javax.swing.JFrame;
  */
 public class JavaFV extends javax.swing.JFrame implements ActionListener {
 
+	private static final String CNAME = "FVDynamicClass";
 	private static final long serialVersionUID = 9129270147061546136L;
 
 	/** Creates new form NewJFrame */
@@ -57,61 +39,37 @@ public class JavaFV extends javax.swing.JFrame implements ActionListener {
 		jButton1 = new javax.swing.JButton();
 		jScrollPane3 = new javax.swing.JScrollPane();
 		jTextArea3 = new javax.swing.JTextArea();
-
 		getContentPane().setLayout(new java.awt.GridLayout(2, 1));
-
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		jPanel1.setLayout(new java.awt.GridLayout(1, 1));
-
 		jScrollPane1.setBorder(new javax.swing.border.TitledBorder("Espressioni da valutare"));
 		jTextArea1.setRows(5);
 		jScrollPane1.setViewportView(jTextArea1);
-
 		jPanel1.add(jScrollPane1);
-
 		jScrollPane2.setBorder(new javax.swing.border.TitledBorder("Espressione da valutare"));
 		jTextArea2.setRows(3);
 		jScrollPane2.setViewportView(jTextArea2);
-
-		// jPanel1.add(jScrollPane2);
-
 		getContentPane().add(jPanel1);
-
 		jPanel3.setLayout(new java.awt.BorderLayout());
-
 		jButton1.setText("Valutazione");
-		/*
-		 * jButton1.addActionListener(new java.awt.event.ActionListener() {
-		 * public void actionPerformed(java.awt.event.ActionEvent evt) {
-		 * jButton1ActionPerformed(evt); } });
-		 */
 		jButton1.addActionListener(this);
-
 		jPanel2.add(jButton1);
-
 		jPanel3.add(jPanel2, java.awt.BorderLayout.NORTH);
-
 		jScrollPane3.setBorder(null);
 		jScrollPane3.setViewportBorder(new javax.swing.border.TitledBorder("Risultato della valutazione"));
 		jTextArea3.setRows(2);
 		jScrollPane3.setViewportView(jTextArea3);
-
 		jPanel3.add(jScrollPane3, java.awt.BorderLayout.CENTER);
-
-		jTextArea1.setFont(new Font("Monospaced", Font.BOLD, 40));
+		jTextArea1.setFont(new Font("Monospaced", Font.BOLD, 15));
 		jTextArea1.setTabSize(2);
-		jTextArea2.setFont(new Font("Monospaced", Font.BOLD, 40));
+		jTextArea2.setFont(new Font("Monospaced", Font.BOLD, 15));
 		jTextArea2.setTabSize(2);
-		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 40));
+		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 15));
 		jTextArea3.setTabSize(2);
 		getContentPane().add(jPanel3);
-
 		pack();
 	}
 
-	// </editor-fold>
-
-	// Variables declaration - do not modify
 	private javax.swing.JButton jButton1;
 	private javax.swing.JPanel jPanel1;
 	private javax.swing.JPanel jPanel2;
@@ -122,116 +80,24 @@ public class JavaFV extends javax.swing.JFrame implements ActionListener {
 	private javax.swing.JTextArea jTextArea1;
 	private javax.swing.JTextArea jTextArea2;
 	private javax.swing.JTextArea jTextArea3;
-	// End of variables declaration
 
 	private void showMsg(String msg) {
 		jTextArea3.setText(msg);
-		// System.err.println(msg);
-	}
-
-	private void appendMsg(String msg) {
-		jTextArea3.append(msg);
-		// System.err.println(msg);
 	}
 
 	private void doRun() throws IOException {
-		// Create a temp. file
-
-		File file = File.createTempFile("jav", ".java", new File(System.getProperty("user.dir")));
-
-		// Set the file to be deleted on exit
-
-		file.deleteOnExit();
-
-		// Get the file name and extract a class name from it
-
-		String filename = file.getName();
-		String classname = filename.substring(0, filename.length() - 5);
-
-		// Output the source
-
-		PrintWriter out = new PrintWriter(new FileOutputStream(file));
-		out.println("/**");
-		out.println(" * Source created on " + new Date());
-		out.println(" */");
-		out.println("public class " + classname + " {");
-
-		out.println("public static String getResult (){");
-		out.println("  return \"\"+ ");
-		out.print("(");
-		out.print(jTextArea1.getText());
-		out.println(")");
-		out.println(";");
-		out.println("}");
-
-		out.println("}");
-
-		// Flush and close the stream
-
-		out.flush();
-		out.close();
-
-		// Compile
-
-		String[] args = new String[] { "-d", System.getProperty("user.dir"), filename };
-
-		// Writer out1 = new BufferedWriter(new OutputStreamWriter(System.out));
-
-		PrintWriter arg1 = new PrintWriter("err.txt");
-
-		int status;
-		status = javac.compile(args, arg1);
-
-		// Run
-
-		switch (status) {
-		case 0: // OK
-			// Make the class file temporary as well
-
-			new File(file.getParent(), classname + ".class").deleteOnExit();
-
-			try {
-				// Try to access the class and run its main method
-				// System.getProperty("user.dir")+"\\"
-
-				// System.setProperty("java.class.path",System.getProperty("java.class.path")+";"+"./");
-
-				ClassLoader my = ClassLoader.getSystemClassLoader();
-				Class clazz = my.loadClass(classname);
-				// Class clazz = Class.forName(classname);
-
-				// System.out.println(clazz.getName());
-				Method getResult = clazz.getMethod("getResult", null);
-				// System.out.println(getResult.getName());
-				jTextArea3.setText((String) getResult.invoke(null, null));
-
-			} catch (InvocationTargetException ex) {
-				// Exception in the main method that we just tried to run
-
-				showMsg("Exception in main: " + ex.getTargetException());
-				// ex.getTargetException().printStackTrace();
-			} catch (Exception ex) {
-				showMsg(ex.toString());
-			}
-			break;
-		case 1:
-			showMsg("Compile status: ERROR" + "\n");
-			BufferedReader in = new BufferedReader(new FileReader("err.txt"));
-			while (in.ready())
-				appendMsg(in.readLine() + "\n");
-			break;
-		case 2:
-			showMsg("Compile status: CMDERR");
-			break;
-		case 3:
-			showMsg("Compile status: SYSERR");
-			break;
-		case 4:
-			showMsg("Compile status: ABNORMAL");
-			break;
-		default:
-			showMsg("Compile status: Unknown exit status");
-		}
+		final StringBuilder sb = new StringBuilder();
+		sb.append("public class " + CNAME + " {\n");
+		sb.append("\tpublic static String getResult (){\n");
+		sb.append("\t\treturn \"\"+");
+		sb.append("( ");
+		sb.append(jTextArea1.getText());
+		sb.append(" )");
+		sb.append(";\n");
+		sb.append("\t}\n");
+		sb.append("}");
+		showMsg(DynaComp.interpret(CNAME, sb.toString()));
+		
 	}
 
 	/**
