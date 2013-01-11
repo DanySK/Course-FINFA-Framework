@@ -3,12 +3,9 @@ package it.unibo.apice.frameworkfv;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Method;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * @author eoliva
@@ -17,7 +14,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
  *         Created on 29-ott-2005 Modified on Jan 11th, 2013
  */
 public class JavaFF extends javax.swing.JFrame implements ActionListener {
-	private static final String CNAME = "DynaClass";
+	private static final String CNAME = "FFDynamicClass";
 	private static final long serialVersionUID = 7491470300619903100L;
 
 	/**
@@ -74,25 +71,10 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 			sb.append(jTextArea2.getText());
 			sb.append(")");
 		}
-		sb.append(";");
-		sb.append("\n\t}");
-		sb.append("\n}");
+		sb.append(";\n\t}\n}");
 
-		System.out.println(sb);
+		showMsg(DynaComp.interpret(CNAME, sb.toString()));
 		
-		try {
-			Class<?> clazz = DynaComp.compileAndLoad(CNAME, sb.toString());
-			if(clazz == null){
-				showMsg("Synctactic error!\n\nPure Java code equivalent to your interpretation request:\n"+sb);
-				return;
-			}
-			Object myClass = clazz.newInstance();
-			Method getResult = clazz.getMethod("getResult", clazz.getClasses());
-			jTextArea3.setText(getResult.invoke(myClass).toString());
-		} catch (Exception e) {
-			// Pokémon exception handling, yay!
-			showMsg(e);
-		}
 	}
 
 	/**
@@ -164,11 +146,6 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 	private void showMsg(String msg) {
 		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 15));
 		jTextArea3.setText(msg);
-	}
-
-	private void showMsg(Exception e) {
-		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 10));
-		jTextArea3.setText(ExceptionUtils.getStackTrace(e));
 	}
 
 }
