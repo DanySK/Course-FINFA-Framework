@@ -3,20 +3,12 @@ package it.unibo.apice.frameworkfv;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
-import com.sun.tools.javac.Main;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * @author eoliva
@@ -25,11 +17,82 @@ import com.sun.tools.javac.Main;
  *         Created on 29-ott-2005 Modified on Jan 11th, 2013
  */
 public class JavaFF extends javax.swing.JFrame implements ActionListener {
+	private static final String CNAME = "DynaClass";
 	private static final long serialVersionUID = 7491470300619903100L;
 
+	/**
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(String args[]) {
+
+		JFrame f = new JavaFF();
+		f.setTitle("Framework F-F 2013");
+		f.setBounds(100, 30, 800, 700);
+		f.setVisible(true);
+
+		f.validate();
+	}
+
+	private javax.swing.JButton jButton1;
+
+	private javax.swing.JPanel jPanel1;
+	private javax.swing.JPanel jPanel2;
+	private javax.swing.JPanel jPanel3;
+	private javax.swing.JScrollPane jScrollPane1;
+	private javax.swing.JScrollPane jScrollPane2;
+	private javax.swing.JScrollPane jScrollPane3;
+	private javax.swing.JTextArea jTextArea1;
+	private javax.swing.JTextArea jTextArea2;
+	private javax.swing.JTextArea jTextArea3;
 	/** Creates new form NewJFrame */
 	public JavaFF() {
 		initComponents();
+	}
+
+	/**
+	 * Listens to actions from the run button.
+	 */
+	public void actionPerformed(ActionEvent e) {
+		Object source = e.getSource();
+		if (jButton1 == source) {
+			jButton1.setEnabled(false);
+			doRun();
+			jButton1.setEnabled(true);
+		}
+	}
+
+	private void doRun() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("public class " + CNAME + " {");
+		sb.append("\npublic ");
+		sb.append(jTextArea1.getText());
+		sb.append("\n\tpublic String getResult(){");
+		sb.append("\n\t\treturn \"\" ");
+		if (jTextArea2.getText().compareTo("") != 0) {
+			sb.append("+(");
+			sb.append(jTextArea2.getText());
+			sb.append(")");
+		}
+		sb.append(";");
+		sb.append("\n\t}");
+		sb.append("\n}");
+
+		System.out.println(sb);
+		
+		try {
+			Class<?> clazz = DynaComp.compileAndLoad(CNAME, sb.toString());
+			if(clazz == null){
+				showMsg("Synctactic error!\n\nPure Java code equivalent to your interpretation request:\n"+sb);
+				return;
+			}
+			Object myClass = clazz.newInstance();
+			Method getResult = clazz.getMethod("getResult", clazz.getClasses());
+			jTextArea3.setText(getResult.invoke(myClass).toString());
+		} catch (Exception e) {
+			// Pokémon exception handling, yay!
+			showMsg(e);
+		}
 	}
 
 	/**
@@ -65,43 +128,32 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 		jTextArea2.setRows(3);
 		jScrollPane2.setViewportView(jTextArea2);
 
-		// jPanel3.setLayout(new java.awt.GridLayout(3, 1));
-		// jPanel3.setLayout(new java.awt.BorderLayout());
 		jPanel3.setLayout(new BoxLayout(jPanel3, BoxLayout.Y_AXIS));
 
-		// jPanel3.add(jScrollPane2, java.awt.BorderLayout.NORTH);
 		jPanel3.add(jScrollPane2);
 
 		getContentPane().add(jPanel1);
 
 		jButton1.setText("Valutazione");
-		/*
-		 * jButton1.addActionListener(new java.awt.event.ActionListener() {
-		 * public void actionPerformed(java.awt.event.ActionEvent evt) {
-		 * jButton1ActionPerformed(evt); } });
-		 */
+
 		jButton1.addActionListener(this);
-		// jPanel2.setLayout(new java.awt.GridLayout(1, 3));
 		jPanel2.add(jButton1);
 		jPanel2.validate();
 
-		// jPanel3.add(jPanel2, java.awt.BorderLayout.CENTER);
 		jPanel3.add(jPanel2);
-		// jPanel3.add(jButton1);
 
 		jScrollPane3.setBorder(null);
 		jScrollPane3.setViewportBorder(new javax.swing.border.TitledBorder("Risultato della valutazione"));
 		jTextArea3.setRows(8);
 		jScrollPane3.setViewportView(jTextArea3);
 
-		// jPanel3.add(jScrollPane3, java.awt.BorderLayout.SOUTH);
 		jPanel3.add(jScrollPane3);
 
-		jTextArea1.setFont(new Font("Monospaced", Font.BOLD, 30));
+		jTextArea1.setFont(new Font("Monospaced", Font.BOLD, 15));
 		jTextArea1.setTabSize(2);
-		jTextArea2.setFont(new Font("Monospaced", Font.BOLD, 30));
+		jTextArea2.setFont(new Font("Monospaced", Font.BOLD, 15));
 		jTextArea2.setTabSize(2);
-		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 30));
+		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 15));
 		jTextArea3.setTabSize(2);
 
 		getContentPane().add(jPanel3);
@@ -109,167 +161,14 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 		pack();
 	}
 
-	// </editor-fold>
-
-	// Variables declaration - do not modify
-	private javax.swing.JButton jButton1;
-	private javax.swing.JPanel jPanel1;
-	private javax.swing.JPanel jPanel2;
-	private javax.swing.JPanel jPanel3;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JScrollPane jScrollPane2;
-	private javax.swing.JScrollPane jScrollPane3;
-	private javax.swing.JTextArea jTextArea1;
-	private javax.swing.JTextArea jTextArea2;
-	private javax.swing.JTextArea jTextArea3;
-	// End of variables declaration
-
 	private void showMsg(String msg) {
+		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 15));
 		jTextArea3.setText(msg);
-		// System.err.println(msg);
 	}
 
-	private void appendMsg(String msg) {
-		jTextArea3.append(msg);
-		// System.err.println(msg);
-	}
-
-	private void doRun() throws IOException {
-		// Create a temp. file
-
-		File file = File.createTempFile("jav", ".java", new File(System.getProperty("user.dir")));
-
-		// Set the file to be deleted on exit
-
-		file.deleteOnExit();
-
-		// Get the file name and extract a class name from it
-
-		String filename = file.getName();
-		String classname = filename.substring(0, filename.length() - 5);
-
-		// Output the source
-
-		PrintWriter out = new PrintWriter(new FileOutputStream(file));
-		out.println("/*");
-		out.println(" * Source created on " + new Date());
-		out.println(" */");
-		out.println("public class " + classname + " {");
-
-		out.print("public ");
-		out.println(jTextArea1.getText());
-
-		out.println("public String getResult(){");
-		out.println("  return \"\" ");
-		if (jTextArea2.getText().compareTo("") != 0) {
-			out.print("+(");
-			out.print(jTextArea2.getText());
-			out.print(")");
-		}
-
-		out.println(";");
-		out.println("}");
-
-		out.println("}");
-
-		// Flush and close the stream
-
-		out.flush();
-		out.close();
-
-		// Compile
-
-		String[] args = new String[] { "-d", System.getProperty("user.dir"), filename };
-		PrintWriter arg1 = new PrintWriter("err.txt");
-		int status;
-		status = Main.compile(args, arg1);
-
-		// Run
-
-		switch (status) {
-		case 0:
-			new File(file.getParent(), classname + ".class").deleteOnExit();
-
-			try {
-				// Try to access the class and run its main method
-
-				Class<?> clazz = Class.forName(classname);
-				Object myClass = clazz.newInstance();
-
-				// System.out.println(clazz.getName());
-				Method getResult = clazz.getMethod("getResult", clazz.getClasses());
-
-				// System.out.println(getResult.getName());
-				jTextArea3.setText(getResult.invoke(myClass).toString());
-
-			} catch (InvocationTargetException ex) {
-				// Exception in the main method that we just tried to run
-
-				showMsg("Exception in main: " + ex.getTargetException());
-				// ex.getTargetException().printStackTrace();
-			} catch (Exception ex) {
-				showMsg(ex.toString());
-			}
-			break;
-		case 1:
-			showMsg("Compile status: ERROR" + "\n");
-			BufferedReader in = new BufferedReader(new FileReader("err.txt"));
-			// showMsg(System.getProperty("user.dir"));
-			while (in.ready())
-				appendMsg(in.readLine() + "\n");
-			break;
-
-		case 2:
-			showMsg("Compile status: CMDERR");
-			break;
-		case 3:
-			showMsg("Compile status: SYSERR");
-			break;
-		case 4:
-			showMsg("Compile status: ABNORMAL");
-			break;
-		default:
-			showMsg("Compile status: Unknown exit status");
-		}
-	}
-
-	/**
-	 * Listens to actions from the run button.
-	 */
-	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
-
-		if (jButton1 == source) {
-			// Disable the run button while we're running
-
-			jButton1.setEnabled(false);
-			try {
-				doRun();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-			jButton1.setEnabled(true);
-		}
-	}
-
-	/**
-	 * @param args
-	 *            the command line arguments
-	 */
-	public static void main(String args[]) {
-
-		JFrame f = new JavaFF();
-		f.setTitle("Framework F-F");
-		f.setBounds(100, 30, 800, 700);
-		f.setVisible(true);
-
-		f.validate();
-		// f.pack();
-
-		/*
-		 * java.awt.EventQueue.invokeLater(new Runnable() { public void run() {
-		 * new JavaFF().setVisible(true); } });
-		 */
+	private void showMsg(Exception e) {
+		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 10));
+		jTextArea3.setText(ExceptionUtils.getStackTrace(e));
 	}
 
 }

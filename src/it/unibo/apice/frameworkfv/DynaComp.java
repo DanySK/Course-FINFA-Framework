@@ -22,11 +22,14 @@ public final class DynaComp {
 	private DynaComp() {
 	}
 
-	public static boolean compileAndLoad(String name, String java) {
+	public static Class<?> compileAndLoad(String name, String java) throws ClassNotFoundException {
 		final JavaFileManager fileManager = new ClassFileManager(JAVAC.getStandardFileManager(null, null, null));
 		final List<JavaFileObject> jfiles = new ArrayList<>(1);
 		jfiles.add(new CharSequenceJavaFileObject(name, java));
-		return JAVAC.getTask(null, fileManager, null, null, null, jfiles).call();
+		if(JAVAC.getTask(null, fileManager, null, null, null, jfiles).call()){
+			return fileManager.getClassLoader(null).loadClass(name);
+		}
+		return null;
 	}
 
 }
