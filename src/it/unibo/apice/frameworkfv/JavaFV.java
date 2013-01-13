@@ -107,15 +107,14 @@ public class JavaFV extends javax.swing.JFrame implements ActionListener {
 		Object source = e.getSource();
 
 		if (jButton1 == source) {
-			// Disable the run button while we're running
-
 			jButton1.setEnabled(false);
 			try {
 				doRun();
-			} catch (IOException ex) {
+			} catch (Exception ex) {
 				ex.printStackTrace();
+			} finally {
+				jButton1.setEnabled(true);
 			}
-			jButton1.setEnabled(true);
 		}
 	}
 

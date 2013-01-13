@@ -3,6 +3,8 @@
  */
 package it.unibo.apice.frameworkfv;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 public final class DynaComp {
 
 	private static final JavaCompiler JAVAC = ToolProvider.getSystemJavaCompiler();
+	private static final PrintStream ERR = System.err;
 
 	private DynaComp() {
 	}
@@ -37,9 +40,12 @@ public final class DynaComp {
 
 	public static String interpret(final String className, final String javaCode) {
 		try {
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			System.setErr(new PrintStream(baos));
 			Class<?> clazz = DynaComp.compileAndLoad(className, javaCode);
+			System.setErr(ERR);
 			if (clazz == null) {
-				return "Synctactic error!\n\nPure Java code equivalent to your interpretation request:\n" + javaCode;
+				return "Synctactic error!\n"+ baos.toString() +"\n\nPure Java code equivalent to your interpretation request:\n" + javaCode;
 			}
 			Object myClass = clazz.newInstance();
 			Method getResult = clazz.getMethod("getResult", clazz.getClasses());
