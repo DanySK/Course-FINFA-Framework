@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import static it.unibo.apice.frameworkfv.Constants.FONT_SIZE;
 
 /**
  * @author eoliva
@@ -14,7 +15,7 @@ import javax.swing.JFrame;
  *         Created on 29-ott-2005 Modified on Jan 11th, 2013
  */
 public class JavaFF extends javax.swing.JFrame implements ActionListener {
-	private static final String CNAME = "FFDynamicClass";
+	private static final String CNAME = "FrameworkFF";
 	private static final long serialVersionUID = 7491470300619903100L;
 
 	/**
@@ -42,6 +43,7 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 	private javax.swing.JTextArea jTextArea1;
 	private javax.swing.JTextArea jTextArea2;
 	private javax.swing.JTextArea jTextArea3;
+
 	/** Creates new form NewJFrame */
 	public JavaFF() {
 		initComponents();
@@ -62,7 +64,7 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 	private void doRun() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("public class " + CNAME + " {");
-		sb.append("\npublic ");
+		sb.append("\n\t");
 		sb.append(jTextArea1.getText());
 		sb.append("\n\tpublic String getResult(){");
 		sb.append("\n\t\treturn \"\" ");
@@ -74,7 +76,7 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 		sb.append(";\n\t}\n}");
 
 		showMsg(DynaComp.interpret(CNAME, sb.toString()));
-		
+
 	}
 
 	/**
@@ -107,7 +109,7 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 		jPanel1.add(jScrollPane1);
 
 		jScrollPane2.setBorder(new javax.swing.border.TitledBorder("Espressione da valutare"));
-		jTextArea2.setRows(3);
+		jTextArea2.setRows(5);
 		jScrollPane2.setViewportView(jTextArea2);
 
 		jPanel3.setLayout(new BoxLayout(jPanel3, BoxLayout.Y_AXIS));
@@ -131,12 +133,13 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 
 		jPanel3.add(jScrollPane3);
 
-		jTextArea1.setFont(new Font("Monospaced", Font.BOLD, 15));
+		jTextArea1.setFont(new Font("Monospaced", Font.BOLD, FONT_SIZE));
 		jTextArea1.setTabSize(2);
-		jTextArea2.setFont(new Font("Monospaced", Font.BOLD, 15));
+		jTextArea2.setFont(new Font("Monospaced", Font.BOLD, FONT_SIZE));
 		jTextArea2.setTabSize(2);
-		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 15));
+		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, FONT_SIZE));
 		jTextArea3.setTabSize(2);
+		jTextArea3.setEditable(false);
 
 		getContentPane().add(jPanel3);
 
@@ -146,6 +149,7 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 	private void showMsg(String msg) {
 		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 15));
 		jTextArea3.setText(msg);
+		jTextArea3.setCaretPosition(0);
 	}
 
 }

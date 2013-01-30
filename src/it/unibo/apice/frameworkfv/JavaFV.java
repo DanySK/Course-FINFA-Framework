@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import static it.unibo.apice.frameworkfv.Constants.FONT_SIZE;
 
 /**
  * @author eoliva
@@ -14,7 +15,7 @@ import javax.swing.JFrame;
  */
 public class JavaFV extends javax.swing.JFrame implements ActionListener {
 
-	private static final String CNAME = "FVDynamicClass";
+	private static final String CNAME = "FrameworkFV";
 	private static final long serialVersionUID = 9129270147061546136L;
 
 	/** Creates new form NewJFrame */
@@ -60,12 +61,14 @@ public class JavaFV extends javax.swing.JFrame implements ActionListener {
 		jTextArea3.setRows(2);
 		jScrollPane3.setViewportView(jTextArea3);
 		jPanel3.add(jScrollPane3, java.awt.BorderLayout.CENTER);
-		jTextArea1.setFont(new Font("Monospaced", Font.BOLD, 15));
+		jTextArea1.setFont(new Font("Monospaced", Font.BOLD, FONT_SIZE));
 		jTextArea1.setTabSize(2);
-		jTextArea2.setFont(new Font("Monospaced", Font.BOLD, 15));
+		jTextArea2.setFont(new Font("Monospaced", Font.BOLD, FONT_SIZE));
 		jTextArea2.setTabSize(2);
-		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 15));
+		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, FONT_SIZE));
 		jTextArea3.setTabSize(2);
+		jTextArea3.setEditable(false);
+		
 		getContentPane().add(jPanel3);
 		pack();
 	}
@@ -83,6 +86,7 @@ public class JavaFV extends javax.swing.JFrame implements ActionListener {
 
 	private void showMsg(String msg) {
 		jTextArea3.setText(msg);
+		jTextArea3.setCaretPosition(0);
 	}
 
 	private void doRun() throws IOException {
@@ -90,14 +94,14 @@ public class JavaFV extends javax.swing.JFrame implements ActionListener {
 		sb.append("public class " + CNAME + " {\n");
 		sb.append("\tpublic static String getResult (){\n");
 		sb.append("\t\treturn \"\"+");
-		sb.append("( ");
+		sb.append("( \n");
 		sb.append(jTextArea1.getText());
-		sb.append(" )");
+		sb.append("\n )");
 		sb.append(";\n");
 		sb.append("\t}\n");
 		sb.append("}");
 		showMsg(DynaComp.interpret(CNAME, sb.toString()));
-		
+
 	}
 
 	/**

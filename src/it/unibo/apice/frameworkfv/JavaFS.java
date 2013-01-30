@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import static it.unibo.apice.frameworkfv.Constants.FONT_SIZE;
 
 /**
  * @author eoliva
@@ -18,7 +19,7 @@ import javax.swing.JFrame;
 public class JavaFS extends javax.swing.JFrame implements ActionListener {
 
 	private static final long serialVersionUID = -2355893182297255013L;
-	private static final String CNAME = "FSDynamicClass";
+	private static final String CNAME = "FrameworkFS";
 
 	/** Creates new form NewJFrame */
 	public JavaFS() {
@@ -48,13 +49,13 @@ public class JavaFS extends javax.swing.JFrame implements ActionListener {
 		jPanel1.setLayout(new java.awt.GridLayout(1, 1));
 
 		jScrollPane1.setBorder(new javax.swing.border.TitledBorder("Dichiarazione di funzioni"));
-		jTextArea1.setRows(4);
+		jTextArea1.setRows(5);
 		jScrollPane1.setViewportView(jTextArea1);
 
 		jPanel1.add(jScrollPane1);
 
 		jScrollPane2.setBorder(new javax.swing.border.TitledBorder("Blocco da eseguire"));
-		jTextArea2.setRows(3);
+		jTextArea2.setRows(5);
 		jScrollPane2.setViewportView(jTextArea2);
 
 		// jPanel1.add(jScrollPane2);
@@ -86,12 +87,13 @@ public class JavaFS extends javax.swing.JFrame implements ActionListener {
 		// jPanel3.add(jScrollPane3, java.awt.BorderLayout.CENTER);
 		jPanel3.add(jScrollPane3);
 
-		jTextArea1.setFont(new Font("Monospaced", Font.BOLD, 24));
+		jTextArea1.setFont(new Font("Monospaced", Font.BOLD, FONT_SIZE));
 		jTextArea1.setTabSize(2);
-		jTextArea2.setFont(new Font("Monospaced", Font.BOLD, 24));
+		jTextArea2.setFont(new Font("Monospaced", Font.BOLD, FONT_SIZE));
 		jTextArea2.setTabSize(2);
-		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, 24));
+		jTextArea3.setFont(new Font("Monospaced", Font.BOLD, FONT_SIZE));
 		jTextArea3.setTabSize(2);
+		jTextArea3.setEditable(false);
 
 		getContentPane().add(jPanel3);
 
@@ -114,6 +116,7 @@ public class JavaFS extends javax.swing.JFrame implements ActionListener {
 
 	private void showMsg(String msg) {
 		jTextArea3.setText(msg);
+		jTextArea3.setCaretPosition(0);
 	}
 
 	private void doRun() throws IOException {
@@ -127,13 +130,11 @@ public class JavaFS extends javax.swing.JFrame implements ActionListener {
 		sb.append("\n\tpublic String print(String app){" + "s=s+app; return s;}");
 		sb.append("\n\tpublic String println(String app){" + "s=s+app+\" \\n \"; return s; }");
 		sb.append("\n\tpublic String getResult(){\n");
-		sb.append("\t\t"+jTextArea2.getText()+"\n");
+		sb.append("\t\t" + jTextArea2.getText() + "\n");
 		sb.append("\t\treturn s;\n");
 		sb.append("\t}\n");
 		sb.append("}");
 
-		System.out.println(sb);
-		
 		showMsg(DynaComp.interpret(CNAME, sb.toString()));
 	}
 

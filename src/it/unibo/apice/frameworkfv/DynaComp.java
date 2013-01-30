@@ -5,6 +5,7 @@ package it.unibo.apice.frameworkfv;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +46,15 @@ public final class DynaComp {
 			Class<?> clazz = DynaComp.compileAndLoad(className, javaCode);
 			System.setErr(ERR);
 			if (clazz == null) {
-				return "Synctactic error!\n"+ baos.toString() +"\n\nPure Java code equivalent to your interpretation request:\n" + javaCode;
+				return "Syntax error!\n" + baos.toString() + "\n\nPure Java code equivalent to your interpretation request:\n" + javaCode;
 			}
 			Object myClass = clazz.newInstance();
 			Method getResult = clazz.getMethod("getResult", clazz.getClasses());
 			return getResult.invoke(myClass).toString();
+		} catch (InvocationTargetException e) {
+			return "Runtime error!\n" + e.getCause() + "\n\nPure Java code equivalent to your interpretation request:\n" + javaCode;
 		} catch (Exception e) {
-			return "Internal error! Please report the following to the course tutor, along with your code:\n\n" + ExceptionUtils.getStackTrace(e) + "\n\nGenerated code:\n"+javaCode;
+			return "Internal error! Please report the following to the course tutor, along with your code:\n\n" + ExceptionUtils.getStackTrace(e) + "\n\nGenerated code:\n" + javaCode;
 		}
 
 	}
