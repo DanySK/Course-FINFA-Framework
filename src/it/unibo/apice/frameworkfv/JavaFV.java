@@ -124,7 +124,7 @@ public class JavaFV extends javax.swing.JFrame implements ActionListener {
 
 	public static void main(String args[]) {
 		JFrame f = new JavaFV();
-		f.setTitle("Framework F-V");
+		f.setTitle("Framework F-V 2013");
 		f.setBounds(100, 30, 800, 700);
 		f.setVisible(true);
 		f.validate();
