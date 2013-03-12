@@ -30,6 +30,9 @@ public final class DynaComp {
 	}
 
 	public static Class<?> compileAndLoad(final String name, final String java) throws ClassNotFoundException {
+		if(JAVAC == null){
+			throw new NoJDKException();
+		}
 		final JavaFileManager fileManager = new ClassFileManager(JAVAC.getStandardFileManager(null, null, null));
 		final List<JavaFileObject> jfiles = new ArrayList<>(1);
 		jfiles.add(new CharSequenceJavaFileObject(name, java));
@@ -53,6 +56,8 @@ public final class DynaComp {
 			return getResult.invoke(myClass).toString();
 		} catch (InvocationTargetException e) {
 			return "Runtime error!\n" + e.getCause() + "\n\nPure Java code equivalent to your interpretation request:\n" + javaCode;
+		} catch (NoJDKException e) {
+			return "JDK TOOLKIT NOT FOUND! Try to run this program from the shell.\n\n" + ExceptionUtils.getStackTrace(e) + "\n\nGenerated code:\n" + javaCode;
 		} catch (Exception e) {
 			return "Internal error! Please report the following to the course tutor, along with your code:\n\n" + ExceptionUtils.getStackTrace(e) + "\n\nGenerated code:\n" + javaCode;
 		}
