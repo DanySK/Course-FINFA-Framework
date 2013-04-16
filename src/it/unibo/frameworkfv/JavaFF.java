@@ -1,4 +1,4 @@
-package it.unibo.apice.frameworkfv;
+package it.unibo.frameworkfv;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -6,7 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import static it.unibo.apice.frameworkfv.Constants.FONT_SIZE;
+
+import static it.unibo.frameworkfv.Constants.FONT_SIZE;
 
 /**
  * @author eoliva

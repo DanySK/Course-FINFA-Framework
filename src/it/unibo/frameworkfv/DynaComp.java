@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.unibo.apice.frameworkfv;
+package it.unibo.frameworkfv;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

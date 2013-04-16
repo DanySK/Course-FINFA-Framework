@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.unibo.apice.frameworkfv;
+package it.unibo.frameworkfv;
 
 /**
  * @author Danilo Pianini

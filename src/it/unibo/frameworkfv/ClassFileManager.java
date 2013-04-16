@@ -1,4 +1,4 @@
-package it.unibo.apice.frameworkfv;
+package it.unibo.frameworkfv;
 
 import java.io.IOException;
 import java.security.SecureClassLoader;
