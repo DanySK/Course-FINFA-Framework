@@ -13,9 +13,10 @@ import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
-import javax.tools.ToolProvider;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import com.sun.tools.javac.api.JavacTool;
 
 /**
  * @author Danilo Pianini
@@ -23,7 +24,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
  */
 public final class DynaComp {
 
-	private static final JavaCompiler JAVAC = ToolProvider.getSystemJavaCompiler();
+	private static final JavaCompiler JAVAC = JavacTool.create();
 	private static final PrintStream ERR = System.err;
 
 	private DynaComp() {
