@@ -26,7 +26,7 @@ public class JavaFF extends javax.swing.JFrame implements ActionListener {
 	public static void main(String args[]) {
 
 		JFrame f = new JavaFF();
-		f.setTitle("Framework F-F 2013");
+		f.setTitle("Framework F-F "+Constants.VERSION);
 		f.setBounds(100, 30, 800, 700);
 		f.setVisible(true);
 

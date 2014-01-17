@@ -160,7 +160,7 @@ public class JavaFS extends javax.swing.JFrame implements ActionListener {
 	public static void main(String args[]) {
 
 		JFrame f = new JavaFS();
-		f.setTitle("Framework F-S 2013");
+		f.setTitle("Framework F-S "+Constants.VERSION);
 		f.setBounds(100, 30, 800, 700);
 		f.setVisible(true);
 
